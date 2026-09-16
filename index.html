@@ -81,28 +81,22 @@
 
     <script>
         const questions = [
-            // Original Scenarios
-            { text: "An administrator needs to make a folder accessible to users across the network. What group scope should they use to allocate access permissions to this folder?", options: ["Global group", "Domain Local group", "Universal group"], answer: "Domain Local group" },
-            { text: "The users in the Accounting team need the same access to resources throughout the network. All users' accounts are in the same domain. What group scope should the administrator use?", options: ["Global group", "Domain Local group", "Universal group"], answer: "Global group" },
-            { text: "This group needs to streamline access for teams of scientists from many domains to many data folders in many domains. What group scope should the administrator use?", options: ["Global group", "Domain Local group", "Universal group"], answer: "Universal group" },
-            { text: "The company has just purchased a new printer. The administrator needs to make this printer available to all users in the domain. What group scope should they use?", options: ["Global group", "Domain Local group", "Universal group"], answer: "Domain Local group" },
-            
-            // New Scenarios
             { text: "You need to group together a new intake of helpdesk staff who all reside in the same local domain. You plan to use this group to grant them access to various resources later. What scope is best?", options: ["Global group", "Domain Local group", "Universal group"], answer: "Global group" },
             { text: "You are setting up permissions for a highly sensitive payroll folder. Which group scope must you apply directly to the folder's Access Control List to manage these permissions securely?", options: ["Global group", "Domain Local group", "Universal group"], answer: "Domain Local group" },
-            { text: "Your company has merged with another business, creating a large multi-domain forest. You need to group together existing Global groups from three different domains. What scope is required?", options: ["Global group", "Domain Local group", "Universal group"], answer: "Universal group" },
+            { text: "Your company has merged with another business, creating a large multi-domain forest. You need to group together existing departmental groups from three different domains. What scope is required?", options: ["Global group", "Domain Local group", "Universal group"], answer: "Universal group" },
             { text: "An administrator wants to assign permissions to a shared drive, but they accidentally apply the permissions directly to a group that cannot contain members from other domains. Which group did they use?", options: ["Global group", "Domain Local group", "Universal group"], answer: "Global group" },
-
-            // Nesting Rules
-            { text: "A Domain Local group from Domain-A can be a member of a Global group from Domain-A.", options: ["Valid Configuration", "Network Violation"], answer: "Network Violation" },
-            { text: "A Global group from Domain-A can be a member of a Domain Local group from Domain-A.", options: ["Valid Configuration", "Network Violation"], answer: "Valid Configuration" },
-            { text: "A Universal group from Domain-A can be a member of a Global group in Domain-A.", options: ["Valid Configuration", "Network Violation"], answer: "Network Violation" },
-            { text: "A Global group from Domain-A can be a member of a Domain Local group from Domain-B.", options: ["Valid Configuration", "Network Violation"], answer: "Valid Configuration" },
-            { text: "A Universal group from Forest-A can be a member of a Global group from Domain-B in Forest-A.", options: ["Valid Configuration", "Network Violation"], answer: "Network Violation" },
-            { text: "A Global group from Domain-A can be a member of a Global group in Domain-A.", options: ["Valid Configuration", "Network Violation"], answer: "Valid Configuration" },
-            { text: "A User from Domain-B can be a member of a Global group in Domain-A.", options: ["Valid Configuration", "Network Violation"], answer: "Network Violation" }
+            { text: "A manager in the Sydney office needs access to a printer located in the Melbourne domain. To grant this access, you should add the manager's Sydney group into which type of group in the Melbourne domain?", options: ["Global group", "Domain Local group", "Universal group"], answer: "Domain Local group" },
+            { text: "The IT security team wants to apply a standard set of read permissions to audit folders across every single domain in your organisation. What scope should the group have to streamline this cross-domain access?", options: ["Global group", "Domain Local group", "Universal group"], answer: "Universal group" },
+            { text: "You are organising accounts for the Marketing department. All marketing staff work within the same domain. To prepare these accounts to be given access to resources later, you should place them into what type of group?", options: ["Global group", "Domain Local group", "Universal group"], answer: "Global group" },
+            { text: "A junior administrator tries to add a user account from the Brisbane domain directly into a group located in the Perth domain, but the system blocks it. What group scope were they likely trying to configure?", options: ["Global group", "Domain Local group", "Universal group"], answer: "Global group" },
+            { text: "Your network spans multiple countries with limited bandwidth. You need a group to assign local permissions, but want to avoid the active directory replication overhead that comes with forest-wide groups. Which group is best?", options: ["Global group", "Domain Local group", "Universal group"], answer: "Domain Local group" },
+            { text: "A project team consists of engineers from both the Asia and Europe domains. You need to nest their respective domain groups together into a single parent group to manage them easily. Which scope allows membership from multiple domains?", options: ["Global group", "Domain Local group", "Universal group"], answer: "Universal group" },
+            { text: "You are managing access to a high-volume database server. Best practice dictates that you should assign the database access permissions to a group that is strictly limited to the local domain. Which group scope fits this requirement?", options: ["Global group", "Domain Local group", "Universal group"], answer: "Domain Local group" },
+            { text: "During a corporate restructure, you successfully add a team group from the HR domain into a resource group in the Finance domain. What must the scope of that receiving Finance group be?", options: ["Global group", "Domain Local group", "Universal group"], answer: "Domain Local group" },
+            { text: "A new branch office has opened. You need to create a group for the branch users, but the group must never be allowed to contain users from outside this specific branch's domain. Which scope enforces this rule?", options: ["Global group", "Domain Local group", "Universal group"], answer: "Global group" },
+            { text: "You want to grant the 'Global Admins' group from your root domain full control over a shared software deployment folder in a child domain. You place 'Global Admins' into a local group in the child domain. What is the scope of this receiving group?", options: ["Global group", "Domain Local group", "Universal group"], answer: "Domain Local group" },
+            { text: "Company policy states that cross-forest access must be heavily regulated. However, you need a group that can consolidate user groups from any domain within your current forest. What scope provides this exact functionality?", options: ["Global group", "Domain Local group", "Universal group"], answer: "Universal group" }
         ];
-
         let score = 0;
         let currentQuestionIndex = 0;
         let gameQuestions = [];
