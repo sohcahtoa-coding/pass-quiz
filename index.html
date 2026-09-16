@@ -58,7 +58,6 @@
         .btn-valid { border-left: 4px solid #3fb950; }
         .btn-violation { border-left: 4px solid #f85149; }
         
-        #timer { font-size: 2rem; color: #ff7b72; margin-top: 30px; font-weight: bold; }
         #start-btn { background-color: #238636; color: white; border: none; font-size: 1.5rem; padding: 15px 40px; margin-top: 20px;}
         #start-btn:hover { background-color: #2ea043; }
         
@@ -70,24 +69,30 @@
     <div id="game-container">
         <h1>AD Group Scope Auditor</h1>
         <div id="score-board">Score: <span id="score">0</span></div>
-        <div id="question-counter" class="hidden">Question <span id="current-q">1</span> of 11</div>
-        <div id="scenario">Test your knowledge of Windows Server group scopes and nesting rules. Can you get a perfect score before the timer runs out?</div>
+        <div id="question-counter" class="hidden">Question <span id="current-q">1</span> of 15</div>
+        <div id="scenario">Test your knowledge of Windows Server group scopes and nesting rules. Take your time, think it through, and see if you can hit the perfect 15,000 score. One wrong move ends the audit!</div>
         
         <div id="options" class="grid-container hidden">
             <!-- Buttons injected by JS -->
         </div>
 
-        <div id="timer" class="hidden">15.0s</div>
         <button id="start-btn" onclick="startGame()">Start Audit</button>
     </div>
 
     <script>
         const questions = [
-            // Scenarios
+            // Original Scenarios
             { text: "An administrator needs to make a folder accessible to users across the network. What group scope should they use to allocate access permissions to this folder?", options: ["Global group", "Domain Local group", "Universal group"], answer: "Domain Local group" },
             { text: "The users in the Accounting team need the same access to resources throughout the network. All users' accounts are in the same domain. What group scope should the administrator use?", options: ["Global group", "Domain Local group", "Universal group"], answer: "Global group" },
             { text: "This group needs to streamline access for teams of scientists from many domains to many data folders in many domains. What group scope should the administrator use?", options: ["Global group", "Domain Local group", "Universal group"], answer: "Universal group" },
             { text: "The company has just purchased a new printer. The administrator needs to make this printer available to all users in the domain. What group scope should they use?", options: ["Global group", "Domain Local group", "Universal group"], answer: "Domain Local group" },
+            
+            // New Scenarios
+            { text: "You need to group together a new intake of helpdesk staff who all reside in the same local domain. You plan to use this group to grant them access to various resources later. What scope is best?", options: ["Global group", "Domain Local group", "Universal group"], answer: "Global group" },
+            { text: "You are setting up permissions for a highly sensitive payroll folder. Which group scope must you apply directly to the folder's Access Control List to manage these permissions securely?", options: ["Global group", "Domain Local group", "Universal group"], answer: "Domain Local group" },
+            { text: "Your company has merged with another business, creating a large multi-domain forest. You need to group together existing Global groups from three different domains. What scope is required?", options: ["Global group", "Domain Local group", "Universal group"], answer: "Universal group" },
+            { text: "An administrator wants to assign permissions to a shared drive, but they accidentally apply the permissions directly to a group that cannot contain members from other domains. Which group did they use?", options: ["Global group", "Domain Local group", "Universal group"], answer: "Global group" },
+
             // Nesting Rules
             { text: "A Domain Local group from Domain-A can be a member of a Global group from Domain-A.", options: ["Valid Configuration", "Network Violation"], answer: "Network Violation" },
             { text: "A Global group from Domain-A can be a member of a Domain Local group from Domain-A.", options: ["Valid Configuration", "Network Violation"], answer: "Valid Configuration" },
@@ -101,8 +106,6 @@
         let score = 0;
         let currentQuestionIndex = 0;
         let gameQuestions = [];
-        let timeLeft = 15.0;
-        let timerInterval;
 
         // Shuffle array function
         function shuffle(array) {
@@ -121,7 +124,6 @@
             document.getElementById('score').innerText = score;
             document.getElementById('start-btn').classList.add('hidden');
             document.getElementById('options').classList.remove('hidden');
-            document.getElementById('timer').classList.remove('hidden');
             document.getElementById('question-counter').classList.remove('hidden');
             
             loadQuestion();
@@ -129,7 +131,7 @@
 
         function loadQuestion() {
             if (currentQuestionIndex >= gameQuestions.length) {
-                endGame("Audit Complete!");
+                endGame("Audit Complete! Perfect Score!");
                 return;
             }
 
@@ -151,42 +153,24 @@
                 
                 optionsDiv.appendChild(btn);
             });
-
-            timeLeft = 15.0;
-            document.getElementById('timer').innerText = timeLeft.toFixed(1) + "s";
-            
-            clearInterval(timerInterval);
-            timerInterval = setInterval(() => {
-                timeLeft -= 0.1;
-                document.getElementById('timer').innerText = timeLeft.toFixed(1) + "s";
-                if (timeLeft <= 0) {
-                    clearInterval(timerInterval);
-                    checkAnswer("Timeout");
-                }
-            }, 100);
         }
 
         function checkAnswer(selected) {
-            clearInterval(timerInterval);
             const q = gameQuestions[currentQuestionIndex];
             
             if (selected === q.answer) {
-                // Base points plus time bonus
-                score += 1000 + Math.floor(timeLeft * 100);
+                score += 1000;
                 document.getElementById('score').innerText = score;
                 currentQuestionIndex++;
                 loadQuestion();
             } else {
-                let msg = selected === "Timeout" ? "Time's up!" : "Incorrect!";
-                endGame(`${msg} The correct answer was: ${q.answer}`);
+                endGame(`Incorrect! The correct answer was: ${q.answer}`);
             }
         }
 
         function endGame(message) {
-            clearInterval(timerInterval);
             document.getElementById('scenario').innerText = message + "\n\nFinal Score: " + score;
             document.getElementById('options').classList.add('hidden');
-            document.getElementById('timer').classList.add('hidden');
             document.getElementById('question-counter').classList.add('hidden');
             document.getElementById('start-btn').innerText = "Try Again";
             document.getElementById('start-btn').classList.remove('hidden');
