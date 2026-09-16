@@ -1,1 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PASS Challenge: Active Directory Auditor</title>
+    <style>
+        body {
+            background-color: #0d1117;
+            color: #c9d1d9;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        #game-container {
+            background-color: #161b22;
+            border: 2px solid #30363d;
+            border-radius: 10px;
+            padding: 40px;
+            width: 100%;
+            max-width: 800px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+        }
+        h1 { color: #58a6ff; font-size: 2.2rem; margin-bottom: 10px; }
+        #score-board { font-size: 1.5rem; color: #3fb950; margin-bottom: 20px; font-weight: bold; }
+        #question-counter { color: #8b949e; margin-bottom: 20px; }
+        #scenario { font-size: 1.5rem; margin-bottom: 30px; min-height: 120px; display: flex; align-items: center; justify-content: center;}
+        
+        .grid-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+        }
+        
+        button {
+            background-color: #21262d;
+            color: #c9d1d9;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            padding: 15px 25px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: 0.2s;
+            flex: 1 1 40%;
+            min-width: 200px;
+        }
+        button:hover { background-color: #30363d; border-color: #8b949e; }
+        button:active { background-color: #282e33; }
+        
+        .btn-valid { border-left: 4px solid #3fb950; }
+        .btn-violation { border-left: 4px solid #f85149; }
+        
+        #timer { font-size: 2rem; color: #ff7b72; margin-top: 30px; font-weight: bold; }
+        #start-btn { background-color: #238636; color: white; border: none; font-size: 1.5rem; padding: 15px 40px; margin-top: 20px;}
+        #start-btn:hover { background-color: #2ea043; }
+        
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
 
+    <div id="game-container">
+        <h1>AD Group Scope Auditor</h1>
+        <div id="score-board">Score: <span id="score">0</span></div>
+        <div id="question-counter" class="hidden">Question <span id="current-q">1</span> of 11</div>
+        <div id="scenario">Test your knowledge of Windows Server group scopes and nesting rules. Can you get a perfect score before the timer runs out?</div>
+        
+        <div id="options" class="grid-container hidden">
+            <!-- Buttons injected by JS -->
+        </div>
+
+        <div id="timer" class="hidden">15.0s</div>
+        <button id="start-btn" onclick="startGame()">Start Audit</button>
+    </div>
+
+    <script>
+        const questions = [
+            // Scenarios
+            { text: "An administrator needs to make a folder accessible to users across the network. What group scope should they use to allocate access permissions to this folder?", options: ["Global group", "Domain Local group", "Universal group"], answer: "Domain Local group" },
+            { text: "The users in the Accounting team need the same access to resources throughout the network. All users' accounts are in the same domain. What group scope should the administrator use?", options: ["Global group", "Domain Local group", "Universal group"], answer: "Global group" },
+            { text: "This group needs to streamline access for teams of scientists from many domains to many data folders in many domains. What group scope should the administrator use?", options: ["Global group", "Domain Local group", "Universal group"], answer: "Universal group" },
+            { text: "The company has just purchased a new printer. The administrator needs to make this printer available to all users in the domain. What group scope should they use?", options: ["Global group", "Domain Local group", "Universal group"], answer: "Domain Local group" },
+            // Nesting Rules
+            { text: "A Domain Local group from Domain-A can be a member of a Global group from Domain-A.", options: ["Valid Configuration", "Network Violation"], answer: "Network Violation" },
+            { text: "A Global group from Domain-A can be a member of a Domain Local group from Domain-A.", options: ["Valid Configuration", "Network Violation"], answer: "Valid Configuration" },
+            { text: "A Universal group from Domain-A can be a member of a Global group in Domain-A.", options: ["Valid Configuration", "Network Violation"], answer: "Network Violation" },
+            { text: "A Global group from Domain-A can be a member of a Domain Local group from Domain-B.", options: ["Valid Configuration", "Network Violation"], answer: "Valid Configuration" },
+            { text: "A Universal group from Forest-A can be a member of a Global group from Domain-B in Forest-A.", options: ["Valid Configuration", "Network Violation"], answer: "Network Violation" },
+            { text: "A Global group from Domain-A can be a member of a Global group in Domain-A.", options: ["Valid Configuration", "Network Violation"], answer: "Valid Configuration" },
+            { text: "A User from Domain-B can be a member of a Global group in Domain-A.", options: ["Valid Configuration", "Network Violation"], answer: "Network Violation" }
+        ];
+
+        let score = 0;
+        let currentQuestionIndex = 0;
+        let gameQuestions = [];
+        let timeLeft = 15.0;
+        let timerInterval;
+
+        // Shuffle array function
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function startGame() {
+            score = 0;
+            currentQuestionIndex = 0;
+            gameQuestions = shuffle([...questions]);
+            
+            document.getElementById('score').innerText = score;
+            document.getElementById('start-btn').classList.add('hidden');
+            document.getElementById('options').classList.remove('hidden');
+            document.getElementById('timer').classList.remove('hidden');
+            document.getElementById('question-counter').classList.remove('hidden');
+            
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            if (currentQuestionIndex >= gameQuestions.length) {
+                endGame("Audit Complete!");
+                return;
+            }
+
+            const q = gameQuestions[currentQuestionIndex];
+            document.getElementById('scenario').innerText = q.text;
+            document.getElementById('current-q').innerText = currentQuestionIndex + 1;
+            
+            const optionsDiv = document.getElementById('options');
+            optionsDiv.innerHTML = '';
+            
+            q.options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.innerText = opt;
+                btn.onclick = () => checkAnswer(opt);
+                
+                // Add specific styling for the Valid/Violation buttons
+                if (opt === "Valid Configuration") btn.classList.add('btn-valid');
+                if (opt === "Network Violation") btn.classList.add('btn-violation');
+                
+                optionsDiv.appendChild(btn);
+            });
+
+            timeLeft = 15.0;
+            document.getElementById('timer').innerText = timeLeft.toFixed(1) + "s";
+            
+            clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                timeLeft -= 0.1;
+                document.getElementById('timer').innerText = timeLeft.toFixed(1) + "s";
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    checkAnswer("Timeout");
+                }
+            }, 100);
+        }
+
+        function checkAnswer(selected) {
+            clearInterval(timerInterval);
+            const q = gameQuestions[currentQuestionIndex];
+            
+            if (selected === q.answer) {
+                // Base points plus time bonus
+                score += 1000 + Math.floor(timeLeft * 100);
+                document.getElementById('score').innerText = score;
+                currentQuestionIndex++;
+                loadQuestion();
+            } else {
+                let msg = selected === "Timeout" ? "Time's up!" : "Incorrect!";
+                endGame(`${msg} The correct answer was: ${q.answer}`);
+            }
+        }
+
+        function endGame(message) {
+            clearInterval(timerInterval);
+            document.getElementById('scenario').innerText = message + "\n\nFinal Score: " + score;
+            document.getElementById('options').classList.add('hidden');
+            document.getElementById('timer').classList.add('hidden');
+            document.getElementById('question-counter').classList.add('hidden');
+            document.getElementById('start-btn').innerText = "Try Again";
+            document.getElementById('start-btn').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
