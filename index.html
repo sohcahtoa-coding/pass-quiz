@@ -79,7 +79,7 @@
     <div id="game-container">
         <h1>Active Directory Challenge</h1>
         <div id="score-board">Score: <span id="score">0</span></div>
-        <div id="question-counter" class="hidden">Question <span id="current-q">1</span> of 15</div>
+        <div id="question-counter" class="hidden">Question <span id="current-q">1</span> of 20</div>
         <div id="scenario">Test your knowledge of Active Directory and Windows Server group scope rules. Take your time, think it through, and see if you can hit the perfect 20,000 score. One wrong move ends the challenge! Just try again...</div>
         
         <div id="options" class="grid-container hidden">
@@ -243,7 +243,7 @@
 
         function loadQuestion() {
             if (currentQuestionIndex >= gameQuestions.length) {
-                endGame("Audit Complete! Perfect Score!");
+                endGame("Challenge Complete! Perfect Score!");
                 return;
             }
 
