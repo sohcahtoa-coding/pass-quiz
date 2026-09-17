@@ -195,6 +195,13 @@
                 options: ["Access Token", "Security Identifier (SID)", "Kerberos Ticket"], 
                 answer: "Access Token",
                 explanation: "Upon successful logon, the system generates a temporary Access Token. This token contains the user's personal SID as well as the SIDs of every group they belong to, which is then used to evaluate access rights."
+            },
+            // Permissions & Access
+            { 
+                text: "A junior administrator logs directly into a file server console in the server room to retrieve a document. Which type of permissions will the system evaluate to determine their access to the files stored on the local C: drive?", 
+                options: ["Share permissions only", "NTFS permissions only", "Both Share and NTFS permissions"], 
+                answer: "NTFS permissions only",
+                explanation: "Share permissions apply only to network access and do not apply to users who are logged on locally[cite: 1]. NTFS permissions provide granular control and work regardless of whether the access method is local or over the network[cite: 1]."
             }
         ];
 
