@@ -85,13 +85,13 @@
                 text: "You need to group together a new intake of helpdesk staff who all reside in the same local domain. You plan to use this group to grant them access to various resources later. What scope is best?", 
                 options: ["Global group", "Domain Local group", "Universal group"], 
                 answer: "Global group",
-                explanation: "Global groups are designed to organise users with similar roles from within the same domain before granting them access to resources."
+                explanation: "Global groups are designed to organise Identities with similar roles from within the same domain before granting them Access to resources."
             },
             { 
                 text: "You are setting up permissions for a highly sensitive payroll folder. Which group scope must you apply directly to the folder's Access Control List to manage these permissions securely?", 
                 options: ["Global group", "Domain Local group", "Universal group"], 
                 answer: "Domain Local group",
-                explanation: "Following AGUDLP best practices, Domain Local groups are the only groups that should be applied directly to a resource's Access Control List (ACL)."
+                explanation: "Following IGUDLA best practices, Domain Local groups are the only groups that should be applied directly to a resource's Access Control List (ACL) to manage Access."
             },
             { 
                 text: "Your company has merged with another business, creating a large multi-domain forest. You need to group together existing departmental groups from three different domains. What scope is required?", 
@@ -103,31 +103,31 @@
                 text: "An administrator wants to assign permissions to a shared drive, but they accidentally apply the permissions directly to a group that cannot contain members from other domains. Which group did they use?", 
                 options: ["Global group", "Domain Local group", "Universal group"], 
                 answer: "Global group",
-                explanation: "Global groups are strictly limited to holding members from their own local domain, making them unsuitable for directly managing resource permissions in a multi-domain environment."
+                explanation: "Global groups are strictly limited to holding members from their own local domain, making them unsuitable for directly managing resource Access in a multi-domain environment."
             },
             { 
                 text: "A manager in the Sydney office needs access to a printer located in the Melbourne domain. To grant this access, you should add the manager's Sydney group into which type of group in the Melbourne domain?", 
                 options: ["Global group", "Domain Local group", "Universal group"], 
                 answer: "Domain Local group",
-                explanation: "Because the printer is located in Melbourne, its permissions must be managed by a Domain Local group created within that specific Melbourne domain."
+                explanation: "Because the printer is located in Melbourne, its Access permissions must be managed by a Domain Local group created within that specific Melbourne domain."
             },
             { 
                 text: "The IT security team consists of staff spread across five different domains. To follow best practice, you need to consolidate their respective domain groups into a single parent group before adding it to a Domain Local group for resource access. What group scope allows you to consolidate groups from multiple different domains?", 
                 options: ["Global group", "Domain Local group", "Universal group"], 
                 answer: "Universal group",
-                explanation: "Universal groups act as the bridge in multi-domain setups, consolidating various Global groups before they are nested into a Domain Local group."
+                explanation: "Universal groups act as the 'U' in IGUDLA for multi-domain setups, consolidating various Global groups before they are nested into a Domain Local group."
             },
             { 
                 text: "You are organising accounts for the Marketing department. All marketing staff work within the same domain. To prepare these accounts to be given access to resources later, you should place them into what type of group?", 
                 options: ["Global group", "Domain Local group", "Universal group"], 
                 answer: "Global group",
-                explanation: "Accounts (users) should always be placed into a Global group belonging to their own domain first."
+                explanation: "Identities (user accounts) should always be placed into a Global group belonging to their own domain first, representing the 'I' and 'G' in the IGUDLA framework."
             },
             { 
                 text: "A junior administrator creates a group in the Perth domain. When they try to add a user from the Brisbane domain to this group, the system blocks it, stating that this specific group type can only contain members from its own local domain. What group scope did they use?", 
                 options: ["Global group", "Domain Local group", "Universal group"], 
                 answer: "Global group",
-                explanation: "The system blocked the action because Global groups cannot accept users or groups from outside their own domain."
+                explanation: "The system blocked the action because Global groups cannot accept Identities or groups from outside their own domain."
             },
             { 
                 text: "Your network spans multiple countries with limited bandwidth. You need a group to assign local permissions, but want to avoid the active directory replication overhead that comes with forest-wide groups. Which group is best?", 
@@ -139,31 +139,31 @@
                 text: "A project team consists of engineers from both the Asia and Europe domains. You need to nest their respective domain groups together into a single parent group to manage them easily. Which scope allows membership from multiple domains?", 
                 options: ["Global group", "Domain Local group", "Universal group"], 
                 answer: "Universal group",
-                explanation: "Universal groups can contain accounts and Global groups from any domain in the forest."
+                explanation: "Universal groups can contain Identities and Global groups from any domain in the forest."
             },
             { 
                 text: "You are managing access to a high-volume database server. Following Microsoft best practice, which group scope should you apply directly to the server's Access Control List to assign these permissions?", 
                 options: ["Global group", "Domain Local group", "Universal group"], 
                 answer: "Domain Local group",
-                explanation: "Microsoft best practice states that resource permissions should only be assigned to Domain Local groups."
+                explanation: "IGUDLA best practice states that resource Access should only be assigned directly to Domain Local groups."
             },
             { 
                 text: "During a corporate restructure, you successfully add a team group from the HR domain into a resource group in the Finance domain. What must the scope of that receiving Finance group be?", 
                 options: ["Global group", "Domain Local group", "Universal group"], 
                 answer: "Domain Local group",
-                explanation: "To grant cross-domain access, the receiving group that manages the resource must be a Domain Local group, as Global groups cannot accept outside members."
+                explanation: "To grant cross-domain Access, the receiving group that manages the resource must be a Domain Local group, as Global groups cannot accept outside members."
             },
             { 
                 text: "A new branch office has opened. You need to create a group for the branch users, but the group must never be allowed to contain users from outside this specific branch's domain. Which scope enforces this rule?", 
                 options: ["Global group", "Domain Local group", "Universal group"], 
                 answer: "Global group",
-                explanation: "By definition, a Global group restricts its membership to accounts originating from its own domain."
+                explanation: "By definition, a Global group restricts its membership to Identities originating from its own domain."
             },
             { 
                 text: "You want to grant the 'Global Admins' group from your root domain full control over a shared software deployment folder in a child domain. You place 'Global Admins' into a local group in the child domain. What is the scope of this receiving group?", 
                 options: ["Global group", "Domain Local group", "Universal group"], 
                 answer: "Domain Local group",
-                explanation: "The receiving group in the child domain collects the Global group and assigns it access to the folder, which is the exact function of a Domain Local group."
+                explanation: "The receiving group in the child domain collects the Global group and assigns it Access to the folder, which is the exact function of a Domain Local group."
             },
             { 
                 text: "Company policy states that cross-forest access must be heavily regulated. However, you need a group that can consolidate user groups from any domain within your current forest. What scope provides this exact functionality?", 
