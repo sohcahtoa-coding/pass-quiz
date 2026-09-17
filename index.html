@@ -28,6 +28,10 @@
             text-align: center;
             box-shadow: 0 4px 20px rgba(0,0,0,0.5);
         }
+        h1 { color: #58a6ff; font-size: 2.2rem; margin-bottom: 10px; }
+        #score-board { font-size: 1.5rem; color: #3fb950; margin-bottom: 20px; font-weight: bold; }
+        #question-counter { color: #8b949e; margin-bottom: 20px; }
+        
         #scenario { 
             font-size: 1.5rem; 
             margin-bottom: 30px; 
@@ -38,10 +42,6 @@
             justify-content: center;
             gap: 15px;
         }
-        h1 { color: #58a6ff; font-size: 2.2rem; margin-bottom: 10px; }
-        #score-board { font-size: 1.5rem; color: #3fb950; margin-bottom: 20px; font-weight: bold; }
-        #question-counter { color: #8b949e; margin-bottom: 20px; }
-        #scenario { font-size: 1.5rem; margin-bottom: 30px; min-height: 120px; display: flex; align-items: center; justify-content: center;}
         
         .grid-container {
             display: flex;
@@ -89,7 +89,7 @@
         <button id="start-btn" onclick="startGame()">Start Challenge</button>
     </div>
 
-<script>
+    <script>
         const questions = [
             { 
                 text: "You need to group together a new intake of helpdesk staff who all reside in the same local domain. You plan to use this group to grant them access to various resources later. What scope is best?", 
@@ -243,7 +243,11 @@
 
         function loadQuestion() {
             if (currentQuestionIndex >= gameQuestions.length) {
-                endGame("Challenge Complete! Perfect Score!");
+                let winMsg = `
+                    <div style="color: #3fb950; font-size: 2.5rem; font-weight: bold;">Audit Complete!</div>
+                    <div style="color: #58a6ff;">Flawless victory. You have mastered IGUDLA!</div>
+                `;
+                endGame(winMsg);
                 return;
             }
 
@@ -271,13 +275,21 @@
                 currentQuestionIndex++;
                 loadQuestion();
             } else {
-                let errorMsg = `<strong>Incorrect!</strong> The correct answer was: ${q.answer}<br><br><span style="color: #8b949e; font-size: 1.2rem;"><strong>Why?</strong> ${q.explanation}</span>`;
+                let errorMsg = `
+                    <div style="color: #f85149; font-size: 2rem; font-weight: bold;">Incorrect!</div>
+                    <div>The correct answer was: <span style="color: #58a6ff; font-weight: bold;">${q.answer}</span></div>
+                    <div style="background-color: #21262d; border-left: 4px solid #8b949e; padding: 15px; border-radius: 4px; text-align: left; font-size: 1.2rem; color: #c9d1d9; max-width: 90%; margin-top: 10px;">
+                        <strong style="color: #8b949e;">Why?</strong> ${q.explanation}
+                    </div>
+                `;
                 endGame(errorMsg);
             }
         }
 
         function endGame(message) {
-            document.getElementById('scenario').innerHTML = message + "<br><br>Final Score: " + score;
+            let finalScoreHtml = `<div style="font-size: 1.8rem; color: #3fb950; font-weight: bold; margin-top: 15px;">Final Score: ${score}</div>`;
+            
+            document.getElementById('scenario').innerHTML = message + finalScoreHtml;
             document.getElementById('options').classList.add('hidden');
             document.getElementById('question-counter').classList.add('hidden');
             document.getElementById('start-btn').innerText = "Try Again";
